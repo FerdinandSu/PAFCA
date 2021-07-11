@@ -5,7 +5,7 @@
 感谢 @billchenchina 提供的统一身份认证插件[hitutil](https://github.com/billchenchina/hitutil)
                           及[原始版本](https://github.com/billchenchina/cxsq)。
 
-[手动疫情上报系统入口](https://xg.hit.edu.cn/zhxy-xgzs/xg_mobile/xs/yqxx)
+[手动申请出校入口](https://xg.hit.edu.cn/zhxy-xgzs/xg_mobile/xsCxsq/editCxsq)
 
 ## 使用方法
 
@@ -52,3 +52,7 @@ Fork的仓库会默认关闭action的执行，需要在仓库设置里打开：
 ## 如果脚本挂了，或者你想修改一下上报地点什么的
 
 `post_data.jsonc`里边是上报数据包的原始数据，修改之即可。
+
+## 特别注意
+
+本项目仅为方便**每日都需要离开校园的同学**进行每日出校申请的工具。按照许可协议，开发者不对本工具的使用负责。使用时，请遵守学校的有关规定。
