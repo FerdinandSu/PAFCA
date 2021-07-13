@@ -38,18 +38,16 @@ def get_application_info(session: requests.Session, module_id: str) -> dict:
     with open('reasons.json', 'r', encoding='utf-8') as reasons_file:
         reasons = json.load(reasons_file)
     # 随机出校理由
-    model['cxly'] = reasons[random.randint(0, len(reasons)-1)]
+    model['cxly'] = random.choice(reasons)
     model['id'] = module_id
     # 日期为第二天
     model['rq'] = (datetime.date.today() +
-                   datetime.timedelta(days=1)).isoformat()
-
-    report_info = {
+         datetime.timedelta(days=1)).isoformat()
+    application_info = {
         'info': json.dumps({'model': model})
     }
-    print_log('生成上报信息成功')
-    # print_log(report_info)
-    return report_info
+    print_log('生成申请信息成功')
+    return application_info
 
 
 def main(args):
@@ -70,18 +68,13 @@ def main(args):
         'User-Agent': 'Mozilla/5.0 (Linux; Android 10; Redmi K30) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.110 Mobile Safari/537.36'
     })
     r = session.get('https://xg.hit.edu.cn/zhxy-xgzs/xg_mobile/shsj/common')
-    response_url = urllib.parse.urlparse(r.url)
-    if response_url.hostname != 'xg.hit.edu.cn':
-        print_log('登录失败')
-        return False, '登录失败'
-    print_log('登录成功')
     r = session.post(
         'https://xg.hit.edu.cn/zhxy-xgzs/xg_mobile/xsCxsq/getCxsq',
         data={'info': '{"id": "id"}'})
 
     response_txt = json.loads(r.text)
 
-    if not response_txt['isSuccess']:
+    if not r.ok or not response_txt['isSuccess']:
         print_log(
             f'无法获取出校申请信息, 响应原文: {response_txt}')
         return False, '无法获取出校申请信息'
@@ -92,10 +85,9 @@ def main(args):
 
     application_info = get_application_info(session, module)
     save_url = 'https://xg.hit.edu.cn/zhxy-xgzs/xg_mobile/xsCxsq/saveCxsq'
-    response = session.post(save_url, data={
-        'info': json.dumps(application_info)
-    })
+    response = session.post(save_url, data=application_info)
     print_log(f'POST {save_url} {response.status_code}')
+    #print_log(response.text)
     response = response.json()
     msg = response['msg']
     res_msg = '提交成功' if response['isSuccess'] else f'提交失败;{msg}'
