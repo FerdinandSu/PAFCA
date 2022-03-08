@@ -121,16 +121,25 @@ if __name__ == '__main__':
                 unsafe = True
                 mail_info[1] = mail_info[1][:-1]
             try:
-                s = smtplib.SMTP(host=host) if len(mail_info) == 2 else smtplib.SMTP(
-                    host=host, port=int(mail_info[1]))
-                if not unsafe:
+                if unsafe:
+                    s = smtplib.SMTP(host=host) if len(mail_info) == 2 else smtplib.SMTP(
+                        host=host, port=int(mail_info[1]))
+                    s.login(mail_addr, args.api_key)
+                    print_log('邮件服务器连接成功')
+                    s.ehlo_or_helo_if_needed()
+                    s.sendmail(mail_addr, mail_addr, msg.as_string())
+                    s.quit()
+                    print_log('邮件发送成功！')
+                else:
+                    s = smtplib.SMTP_SSL(host=host) if len(mail_info) == 2 else smtplib.SMTP_SSL(
+                        host=host, port=int(mail_info[1]))
+                    s.ehlo(host)
                     s.starttls()
-                s.login(mail_addr, args.api_key)
-                print_log('邮件服务器连接成功')
-                s.ehlo_or_helo_if_needed()
-                s.sendmail(mail_addr, mail_addr, msg.as_string())
-                s.quit()
-                print_log('邮件发送成功！')
+                    s.login(mail_addr, args.api_key)
+                    print_log('邮件服务器连接成功')
+                    s.sendmail(mail_addr, mail_addr, msg.as_string())
+                    s.quit()
+                    print_log('邮件发送成功！')
             except Exception as e:
                 print_log('邮件发送失败。')
                 print_log(e)
