@@ -37,12 +37,12 @@ def get_application_info(session: requests.Session, module_id: str) -> dict:
 
     with open('reasons.json', 'r', encoding='utf-8') as reasons_file:
         reasons = json.load(reasons_file)
-    # 随机出校理由
-    model['cxly'] = random.choice(reasons)
+    # 顺序出校理由
+    model['cxly'] = reasons[datetime.date.today().day % len(reasons)]
     model['id'] = module_id
     # 日期为第二天
     model['rq'] = (datetime.date.today() +
-         datetime.timedelta(days=1)).isoformat()
+                   datetime.timedelta(days=1)).isoformat()
     application_info = {
         'info': json.dumps({'model': model})
     }
@@ -87,7 +87,7 @@ def main(args):
     save_url = 'https://xg.hit.edu.cn/zhxy-xgzs/xg_mobile/xsCxsq/saveCxsq'
     response = session.post(save_url, data=application_info)
     print_log(f'POST {save_url} {response.status_code}')
-    #print_log(response.text)
+    # print_log(response.text)
     response = response.json()
     msg = response['msg']
     res_msg = '提交成功' if response['isSuccess'] else f'提交失败;{msg}'
