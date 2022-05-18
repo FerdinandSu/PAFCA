@@ -37,8 +37,8 @@ def get_application_info(session: requests.Session, module_id: str) -> dict:
 
     with open('reasons.json', 'r', encoding='utf-8') as reasons_file:
         reasons = json.load(reasons_file)
-    # 顺序出校理由
-    model['cxly'] = reasons[datetime.date.today().day % len(reasons)]
+    # 随机出校理由
+    model['cxly'] = random.choice(reasons)
     model['id'] = module_id
     # 日期为第二天
     model['rq'] = (datetime.date.today() +
