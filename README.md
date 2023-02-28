@@ -1,5 +1,7 @@
 # PAFCA：门禁申请代理
 
+**2023年2月28日，哈工业彻底取消临时出入校申请，Archived PAFCA会成为它的墓碑。**
+
 Proxied Applicator For Control Access
 
 基于Github Action的每日自动门禁申请，开箱即用。并提供邮件/微信提醒功能
